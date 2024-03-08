@@ -1,0 +1,59 @@
+#include <iostream>
+#include <vector>
+#include <ctime> // for random number generation
+
+using namespace std;
+
+// Function to display particle size distribution
+void displayPSD(const vector<double>& sizes, const vector<double>& percentages) {
+    cout << "\nParticle Size Distribution (PSD):\n";
+    for (size_t i = 0; i < sizes.size(); ++i) {
+        cout << "Size: " << sizes[i] << " mm - Percentage: " << percentages[i] << "%" << endl;
+    }
+}
+
+int main() {
+    srand(static_cast<unsigned int>(time(nullptr)));
+
+    // Enter the parameters
+    double feedRate;
+    cout << "Enter the feed rate (ton/hour or kg/s): ";
+    cin >> feedRate;
+
+    // Input Particle Size Distribution (PSD)
+    vector<double> sizes = {1.0, 2.0, 3.0};  // Example sizes in mm
+    vector<double> percentages = {30, 30, 30};     // Example percentages
+
+    // Crusher settings
+    double minCrusherSize, maxCrusherSize;
+    cout << "Enter the minimum crusher size (mm): ";
+    cin >> minCrusherSize;
+    cout << "Enter the maximum crusher size (mm): ";
+    cin >> maxCrusherSize;
+
+    //function to Simulate crushing process
+    vector<double> crushedSizes;
+
+    for (size_t i = 0; i < sizes.size(); ++i) {
+        double newSize = minCrusherSize + (maxCrusherSize - minCrusherSize) * static_cast<double>(rand()) / RAND_MAX;
+        crushedSizes.push_back(newSize);
+    }
+
+    // Display the final PSD of the crushed material
+    displayPSD(crushedSizes, percentages);
+
+    // Calculate and display the overall reduction ratio
+    double averageFeedSize = 1.0;
+    double averageCrushedSize = 1.0;
+
+    for (size_t i = 0; i < sizes.size(); ++i) {
+        averageFeedSize += sizes[i] * percentages[i];
+        averageCrushedSize += crushedSizes[i] * percentages[i];
+    }
+
+    double reductionRatio = averageFeedSize / averageCrushedSize;
+
+    cout << "\nOverall Reduction Ratio: " << reductionRatio << endl;
+
+    return 0;
+}
